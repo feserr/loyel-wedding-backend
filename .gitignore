@@ -1,0 +1,32 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# testing
+coverage/
+
+# production
+dist/
+build/
+
+# misc
+.DS_Store
+.parcel-cache
+haters
+.env*.*
+.vscode
+.cache
+seedData.js
+
+# package managers
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npmrc
+
+# sqlite
+*.sqlite
+
+# IDEs
+.vscode/
