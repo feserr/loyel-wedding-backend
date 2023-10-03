@@ -13,11 +13,13 @@ const bankController = {
 
       const accounts = await Bank.findAll();
 
-      return res.status(200).send({ accounts });
+      res.send({ accounts });
     } catch (error) {
       global.logger.error(error.message);
       res.status(500).send({ message: 'Failed to retrieve bank data' });
     }
+
+    return res.status(200);
   },
 };
 

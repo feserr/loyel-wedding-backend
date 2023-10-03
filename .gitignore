@@ -17,7 +17,7 @@ haters
 .env*.*
 .vscode
 .cache
-seedData.js
+seedDataDev.js
 
 # package managers
 npm-debug.log*
