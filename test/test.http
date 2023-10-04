@@ -1,0 +1,55 @@
+@hostname = http://localhost:3005
+
+GET {{hostname}}/api/track HTTP/1.1
+
+###
+
+GET {{hostname}}/api/track/7LQLbChhh7aURz53yOTL HTTP/1.1
+
+###
+
+POST {{hostname}}/api/track/7LQLbChhh7aURz53yO HTTP/1.1
+content-type: application/json
+
+{
+  "uri": "spotify:track:7LQLbChhh7aURz53yOTL",
+  "name": "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",
+  "album": "Entre Poetas y Presos",
+  "artist": "La Raíz",
+  "spotifyUserId": "feserr"
+}
+
+###
+
+DELETE {{hostname}}/api/track/7LQLbChhh7aURz53yOTLAr&feserr HTTP/1.1
+
+###
+
+GET {{hostname}}/api/like/7LQLbChhh7aURz53yOTL HTTP/1.1
+
+###
+
+POST {{hostname}}/api/like HTTP/1.1
+content-type: application/json
+
+{
+  "spotifyTrackId": "7LQLbChhh7aURz53yOTLAr",
+  "spotifyUserId": "feserr"
+}
+
+###
+
+GET {{hostname}}/api/user/feserr HTTP/1.1
+
+###
+
+POST {{hostname}}/api/user/ HTTP/1.1
+content-type: application/json
+
+{
+  "spotifyUserId": "feserr"
+}
+
+###
+
+DELETE {{hostname}}/api/user/feserr HTTP/1.1
