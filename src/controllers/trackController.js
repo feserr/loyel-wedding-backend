@@ -24,6 +24,7 @@ const trackController = {
             artist: track.artist,
             spotifyTrackId: track.spotifyTrackId,
             spotifyUserId: user.spotifyUserId,
+            spotifyDisplayName: user.spotifyDisplayName,
             likes: userLikes,
           };
         }),
@@ -47,6 +48,7 @@ const trackController = {
         return res.status(200).send({
           trackInfo: {
             spotifyUserId: '',
+            spotifyDisplayName: '',
             likes: [],
           },
         });
@@ -63,6 +65,7 @@ const trackController = {
       res.send({
         trackInfo: {
           spotifyUserId: user.spotifyUserId,
+          spotifyDisplayName: user.spotifyDisplayName,
           likes: userLikes,
         },
       });

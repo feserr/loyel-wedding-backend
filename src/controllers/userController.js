@@ -4,11 +4,12 @@ const userController = {
   register: async (req, res) => {
     try {
       const { spotifyUserId } = req.params;
-      const user = await User.findOne({ where: { spotifyUserId } });
-      if (user) return res.status(204).send({ message: 'User already exist' });
-
-      User.create({ spotifyUserId });
-      res.send({ message: 'User created' });
+      const { spotifyDisplayName } = req.body;
+      await User.findOne({ where: { spotifyUserId } }).then((obj) => {
+        if (obj) return obj.update({ spotifyUserId, spotifyDisplayName });
+        return User.create({ spotifyUserId, spotifyDisplayName });
+      });
+      res.send({ message: 'Success' });
     } catch (error) {
       global.logger.error(error.message);
       res.status(500).send({ message: 'Failed register the user' });
@@ -73,6 +74,7 @@ const userController = {
             artist: track.artist,
             spotifyTrackId: track.spotifyTrackId,
             spotifyUserId: user.spotifyUserId,
+            spotifyDisplayName: user.spotifyDisplayName,
             likes: userLikes,
           };
         }),
