@@ -1,0 +1,43 @@
+@hostname = http://localhost:3005
+
+POST {{hostname}}/api/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "email": "fraserm1989@gmail.com",
+  "name": "Elías",
+  "password": "123456"
+}
+
+###
+
+POST {{hostname}}/api/auth/signin HTTP/1.1
+content-type: application/json
+
+{
+  "email": "jenna.doe@email.com",
+  "password": "1234"
+}
+
+###
+
+GET {{hostname}}/api/auth/forgot/fraserm1989@gmail.com HTTP/1.1
+
+###
+
+POST {{hostname}}/api/auth/newPassword HTTP/1.1
+content-type: application/json
+
+{
+  "email": "jenna.doe@email.com",
+  "tempPassword": "qzkda5te",
+  "newPassword": "1234"
+}
+
+###
+
+POST {{hostname}}/api/auth/singout HTTP/1.1
+
+###
+
+DELETE {{hostname}}/api/auth/ HTTP/1.1
