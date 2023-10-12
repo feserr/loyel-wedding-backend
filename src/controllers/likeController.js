@@ -16,7 +16,7 @@ const likeController = {
       const likesBySpotifyIds = await Promise.all(
         trackLikes.map(async (like) => {
           const user = await User.findByPk(like.userId);
-          return user.name;
+          return user.id;
         }),
       );
 
