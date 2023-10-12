@@ -14,7 +14,7 @@ const trackController = {
           const tracksLikes = await Like.findAll({ where: { trackId: track.id } });
           const userLikes = await Promise.all(
             await tracksLikes.map(
-              async (element) => (await User.findByPk(element.userId)).name,
+              async (element) => (await User.findByPk(element.userId)).id,
             ),
           );
 
@@ -25,7 +25,8 @@ const trackController = {
             album: track.album,
             artist: track.artist,
             spotifyTrackId: track.spotifyTrackId,
-            addedBy: user.name,
+            addedById: user.id,
+            addedByName: user.name,
             likes: userLikes,
           };
         }),
@@ -48,7 +49,8 @@ const trackController = {
       if (!trackExist) {
         return res.status(200).send({
           trackInfo: {
-            addedBy: '',
+            addedById: '',
+            addedByName: '',
             likes: [],
           },
         });
@@ -58,13 +60,14 @@ const trackController = {
       const tracksLikes = await Like.findAll({ where: { trackId: trackExist.id } });
       const userLikes = await Promise.all(
         await tracksLikes.map(
-          async (element) => (await User.findByPk(element.userId)).name,
+          async (element) => (await User.findByPk(element.userId)).id,
         ),
       );
 
       res.send({
         trackInfo: {
-          addedBy: user.name,
+          addedById: user.id,
+          addedByName: user.name,
           likes: userLikes,
         },
       });

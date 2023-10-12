@@ -10,17 +10,19 @@ const searchController = {
 
       tracks = await Promise.all(
         tracks.body.tracks.items.map(async (track) => {
-          let addedBy = '';
+          let addedById = '';
+          let addedByName = '';
           let likes = [];
 
           const trackExist = await Track.findOne({ where: { spotifyTrackId: track.id } });
           if (trackExist) {
             const user = await User.findByPk(trackExist.userId);
-            addedBy = user.name;
+            addedById = user.id;
+            addedByName = user.name;
 
             const tracksLikes = await Like.findAll({ where: { trackId: trackExist.id } });
             likes = await Promise.all(
-              await tracksLikes.map(async (element) => (await User.findByPk(element.userId)).name),
+              await tracksLikes.map(async (element) => (await User.findByPk(element.userId)).id),
             );
           }
 
@@ -30,7 +32,8 @@ const searchController = {
             name: track.name,
             album: track.album.name,
             artist: track.artists[0].name,
-            addedBy,
+            addedById,
+            addedByName,
             likes,
           };
         }),

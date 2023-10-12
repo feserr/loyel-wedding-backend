@@ -33,7 +33,21 @@ const userController = {
       res.send({ tracks });
     } catch (error) {
       global.logger.error(error.message);
-      res.status(500).send({ message: 'Failed to delete the user' });
+      res.status(500).send({ message: 'Failed to get logged user info' });
+    }
+
+    return res.status(200);
+  },
+
+  getInfo: async (req, res) => {
+    try {
+      const user = await User.findByPk(req.params.id);
+      if (!user) return res.status(400).send({ message: 'User not exist' });
+
+      res.send({ name: user.name });
+    } catch (error) {
+      global.logger.error(error.message);
+      res.status(500).send({ message: 'Failed to get the user info' });
     }
 
     return res.status(200);
