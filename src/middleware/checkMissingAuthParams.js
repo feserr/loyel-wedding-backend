@@ -5,7 +5,7 @@ const checkMissingAuthParams = async (req, res, next) => {
     });
   }
 
-  next();
+  return next();
 };
 
 module.exports = { checkMissingAuthParams };

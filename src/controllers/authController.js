@@ -140,7 +140,7 @@ const authController = {
 
     return res.status(200);
   },
-  
+
   edit: async (req, res) => {
     try {
       const user = await findUser(req.user.id);
