@@ -140,6 +140,26 @@ const authController = {
 
     return res.status(200);
   },
+  
+  edit: async (req, res) => {
+    try {
+      const user = await findUser(req.user.id);
+      if (!user) return res.status(400).send({ message: 'User not exist' });
+
+      const userWithNewName = await User.findOne({ where: { name: req.body.newName } });
+      if (userWithNewName) return res.status(400).send({ message: 'Nombre ya en uso' });
+
+      await user.set('name', req.body.newName);
+      await user.save();
+
+      res.send({ message: 'Success' });
+    } catch (error) {
+      global.logger.error(error.message);
+      res.status(500).send({ message: 'Failed to forgot the user' });
+    }
+
+    return res.status(200);
+  },
 
   signout: async (req, res) => {
     try {

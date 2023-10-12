@@ -9,6 +9,7 @@ router.post('/signin', checkMissingAuthParams, authController.signin);
 router.post('/register', [checkMissingAuthParams, checkDuplicate], authController.register);
 router.get('/forgot/:email', authController.forgot);
 router.post('/newPassword', authController.newPassword);
+router.put('/', verifyToken, authController.edit);
 router.post('/signout', verifyToken, authController.signout);
 router.delete('/', verifyToken, authController.delete);
 
