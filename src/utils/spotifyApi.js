@@ -7,11 +7,18 @@ const spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 });
 
-const toSeconds = 1000;
-let refreshTime = 0;
-setTimeout(() => {
-  const expiresIn = retrieveAccessToken();
-  if (expiresIn !== -1) refreshTime = expiresIn - 10;
-}, refreshTime * toSeconds);
+async function tokenRefresher(refreshTime) {
+  const toSeconds = 1000;
+  setTimeout(async () => {
+    let nextRefreshTime = refreshTime;
+
+    const expiresIn = await retrieveAccessToken();
+    if (expiresIn !== -1) nextRefreshTime = expiresIn - 10;
+
+    tokenRefresher(nextRefreshTime);
+  }, refreshTime * toSeconds);
+}
+
+tokenRefresher(1);
 
 global.spotifyApi = spotifyApi;
