@@ -1,5 +1,5 @@
 const { Track, User, Like } = require('../../db');
-const { retrieveAccessToken } = require('../utils/spotify');
+const retrieveAccessToken = require('../utils/spotify');
 
 const searchController = {
   search: async (req, res) => {
