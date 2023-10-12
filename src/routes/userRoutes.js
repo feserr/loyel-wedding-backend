@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const userController = require('../controllers/userController');
+const verifyToken = require('../middleware/verifyToken');
 
-router.get('/:spotifyUserId', userController.info);
-router.put('/:spotifyUserId', userController.register);
-router.delete('/:spotifyUserId', userController.delete);
+router.get('/', verifyToken, userController.info);
+router.get('/:id', userController.getInfo);
 
 module.exports = router;

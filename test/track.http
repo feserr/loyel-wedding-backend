@@ -43,12 +43,7 @@ GET {{hostname}}/api/user/feserr HTTP/1.1
 
 ###
 
-POST {{hostname}}/api/user/ HTTP/1.1
-content-type: application/json
-
-{
-  "spotifyUserId": "feserr"
-}
+GET {{hostname}}/api/user/ HTTP/1.1
 
 ###
 

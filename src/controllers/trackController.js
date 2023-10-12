@@ -1,6 +1,8 @@
 const { Track, User, Like } = require('../../db');
 
-const { MAX_SONGS = 2 } = process.env;
+const { findUser } = require('../utils/user');
+
+const { MAX_SONGS = 5 } = process.env;
 
 const trackController = {
   getTracks: async (_, res) => {
@@ -12,7 +14,7 @@ const trackController = {
           const tracksLikes = await Like.findAll({ where: { trackId: track.id } });
           const userLikes = await Promise.all(
             await tracksLikes.map(
-              async (element) => (await User.findByPk(element.userId)).spotifyUserId,
+              async (element) => (await User.findByPk(element.userId)).id,
             ),
           );
 
@@ -23,8 +25,8 @@ const trackController = {
             album: track.album,
             artist: track.artist,
             spotifyTrackId: track.spotifyTrackId,
-            spotifyUserId: user.spotifyUserId,
-            spotifyDisplayName: user.spotifyDisplayName,
+            addedById: user.id,
+            addedByName: user.name,
             likes: userLikes,
           };
         }),
@@ -47,8 +49,8 @@ const trackController = {
       if (!trackExist) {
         return res.status(200).send({
           trackInfo: {
-            spotifyUserId: '',
-            spotifyDisplayName: '',
+            addedById: '',
+            addedByName: '',
             likes: [],
           },
         });
@@ -58,14 +60,14 @@ const trackController = {
       const tracksLikes = await Like.findAll({ where: { trackId: trackExist.id } });
       const userLikes = await Promise.all(
         await tracksLikes.map(
-          async (element) => (await User.findByPk(element.userId)).spotifyUserId,
+          async (element) => (await User.findByPk(element.userId)).id,
         ),
       );
 
       res.send({
         trackInfo: {
-          spotifyUserId: user.spotifyUserId,
-          spotifyDisplayName: user.spotifyDisplayName,
+          addedById: user.id,
+          addedByName: user.name,
           likes: userLikes,
         },
       });
@@ -83,9 +85,8 @@ const trackController = {
       const trackExist = await Track.findOne({ where: { spotifyTrackId } });
       if (trackExist) return res.status(400).send({ message: 'Track already at track' });
 
-      const { spotifyUserId } = req.body;
-      const user = await User.findOne({ where: { spotifyUserId } });
-      if (!user) return res.status(404).send({ message: 'User not exist' });
+      const user = await findUser(req.user.id);
+      if (!user) return res.status(400).send({ message: 'User not exist' });
 
       const userTracks = await Track.findAll({ where: { userId: user.id } });
       if (userTracks && userTracks.length >= MAX_SONGS) return res.status(400).send({ message: 'User reached cuota' });
@@ -114,9 +115,8 @@ const trackController = {
 
   removeTrack: async (req, res) => {
     try {
-      const { spotifyUserId } = req.params;
-      const user = await User.findOne({ where: { spotifyUserId } });
-      if (!user) return res.status(404).send({ message: 'User not exist' });
+      const user = await findUser(req.user.id);
+      if (!user) return res.status(400).send({ message: 'User not exist' });
 
       const { spotifyTrackId } = req.params;
       const trackExist = await Track.findOne({ where: { spotifyTrackId } });

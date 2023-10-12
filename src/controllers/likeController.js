@@ -1,4 +1,5 @@
 const { Track, User, Like } = require('../../db');
+const { findUser } = require('../utils/user');
 
 const likeController = {
   getTrackLikes: async (req, res) => {
@@ -15,7 +16,7 @@ const likeController = {
       const likesBySpotifyIds = await Promise.all(
         trackLikes.map(async (like) => {
           const user = await User.findByPk(like.userId);
-          return user.spotifyUserId;
+          return user.id;
         }),
       );
 
@@ -35,9 +36,8 @@ const likeController = {
       const track = await Track.findOne({ where: { spotifyTrackId } });
       if (!track) return res.status(404).send({ message: 'Track not exist' });
 
-      const { spotifyUserId } = req.body;
-      const user = await User.findOne({ where: { spotifyUserId } });
-      if (!user) return res.status(404).send({ message: 'User not exist' });
+      const user = await findUser(req.user.id);
+      if (!user) return res.status(400).send({ message: 'User not exist' });
 
       const trackLikes = await Like.findOne({
         where: { trackId: track.id, userId: user.id },
