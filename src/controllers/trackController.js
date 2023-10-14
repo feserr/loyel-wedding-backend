@@ -13,9 +13,7 @@ const trackController = {
           const user = await User.findByPk(track.userId);
           const tracksLikes = await Like.findAll({ where: { trackId: track.id } });
           const userLikes = await Promise.all(
-            await tracksLikes.map(
-              async (element) => (await User.findByPk(element.userId)).id,
-            ),
+            await tracksLikes.map(async (element) => (await User.findByPk(element.userId)).id),
           );
 
           return {
@@ -31,6 +29,8 @@ const trackController = {
           };
         }),
       );
+
+      tracks.sort((a, b) => b.likes.length - a.likes.length);
 
       res.status(200).send({ tracks });
     } catch (error) {
@@ -59,9 +59,7 @@ const trackController = {
       const user = await User.findByPk(trackExist.userId);
       const tracksLikes = await Like.findAll({ where: { trackId: trackExist.id } });
       const userLikes = await Promise.all(
-        await tracksLikes.map(
-          async (element) => (await User.findByPk(element.userId)).id,
-        ),
+        await tracksLikes.map(async (element) => (await User.findByPk(element.userId)).id),
       );
 
       res.send({
