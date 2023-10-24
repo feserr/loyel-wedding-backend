@@ -1,7 +1,9 @@
-const { Track, User, Like } = require('../../db');
-
 const { findUser } = require('../utils/user');
+const db = require('../../db/db/models');
 
+const {
+  User, Track, Like, Role, RoleType,
+} = db;
 const { MAX_SONGS = 5 } = process.env;
 
 const trackController = {
@@ -16,6 +18,13 @@ const trackController = {
             await tracksLikes.map(async (element) => (await User.findByPk(element.userId)).id),
           );
 
+          let userRoleColor = 'black';
+          const userRole = await Role.findOne({ where: { userId: user.id } });
+          if (userRole) {
+            const roleType = await RoleType.findByPk(userRole.roleTypeId);
+            if (roleType) userRoleColor = roleType.color;
+          }
+
           return {
             id: track.spotifyTrackId,
             uri: track.uri,
@@ -26,6 +35,7 @@ const trackController = {
             addedById: user.id,
             addedByName: user.name,
             likes: userLikes,
+            userRoleColor,
           };
         }),
       );
@@ -52,6 +62,7 @@ const trackController = {
             addedById: '',
             addedByName: '',
             likes: [],
+            userRoleColor: 'black',
           },
         });
       }
@@ -62,11 +73,19 @@ const trackController = {
         await tracksLikes.map(async (element) => (await User.findByPk(element.userId)).id),
       );
 
+      let userRoleColor = 'black';
+      const userRole = await Role.findOne({ where: { userId: user.id } });
+      if (userRole) {
+        const roleType = await RoleType.findByPk(userRole.roleTypeId);
+        if (roleType) userRoleColor = roleType.color;
+      }
+
       res.send({
         trackInfo: {
           addedById: user.id,
           addedByName: user.name,
           likes: userLikes,
+          userRoleColor,
         },
       });
     } catch (error) {
@@ -86,8 +105,15 @@ const trackController = {
       const user = await findUser(req.user.id);
       if (!user) return res.status(400).send({ message: 'User not exist' });
 
+      let userMaxSongs = MAX_SONGS;
+      const userRole = await Role.findOne({ where: { userId: user.id } });
+      if (userRole) {
+        const roleType = await RoleType.findByPk(userRole.roleTypeId);
+        if (roleType) userMaxSongs = roleType.maxSongs;
+      }
+
       const userTracks = await Track.findAll({ where: { userId: user.id } });
-      if (userTracks && userTracks.length >= MAX_SONGS) return res.status(400).send({ message: 'User reached cuota' });
+      if (userTracks && userTracks.length >= userMaxSongs) return res.status(400).send({ message: 'User reached cuota' });
 
       const newTrack = await Track.create({
         uri: req.body.uri,
@@ -95,12 +121,16 @@ const trackController = {
         album: req.body.album,
         artist: req.body.artist,
         spotifyTrackId,
+        userId: user.id,
       });
       await user.addTrack(newTrack);
 
-      const like = await Like.create();
-      user.addLike(like);
-      newTrack.addLike(like);
+      const like = await Like.create({
+        userId: user.id,
+        trackId: newTrack.id,
+      });
+      await user.addLike(like);
+      await newTrack.addLike(like);
 
       res.status(200).send({ message: 'Track added' });
     } catch (error) {

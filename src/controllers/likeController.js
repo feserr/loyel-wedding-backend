@@ -1,5 +1,7 @@
-const { Track, User, Like } = require('../../db');
 const { findUser } = require('../utils/user');
+const db = require('../../db/db/models');
+
+const { User, Track, Like } = db;
 
 const likeController = {
   getTrackLikes: async (req, res) => {
@@ -44,12 +46,15 @@ const likeController = {
       });
 
       if (trackLikes) {
-        trackLikes.destroy();
+        await trackLikes.destroy();
         res.send({ message: 'Disliked' });
       } else {
-        const like = await Like.create();
-        user.addLike(like);
-        track.addLike(like);
+        const like = await Like.create({
+          userId: user.id,
+          trackId: track.id,
+        });
+        await user.addLike(like);
+        await track.addLike(like);
         res.send({ message: 'Liked' });
       }
     } catch (error) {

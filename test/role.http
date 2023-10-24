@@ -1,0 +1,28 @@
+@hostname = http://localhost:3005
+
+POST {{hostname}}/api/auth/signin HTTP/1.1
+content-type: application/json
+
+{
+  "email": "jenna@doe.com",
+  "password": "123456"
+}
+
+###
+
+GET {{hostname}}/api/role HTTP/1.1
+
+###
+
+POST {{hostname}}/api/role/9dbe1615-ecf7-4c7d-aa0c-53b8ffc3d78e HTTP/1.1
+content-type: application/json
+
+{
+  "type": 'friend'
+}
+
+###
+
+DELETE {{hostname}}/api/role/9dbe1615-ecf7-4c7d-aa0c-53b8ffc3d78e HTTP/1.1
+
+###

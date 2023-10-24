@@ -13,7 +13,7 @@ content-type: application/json
 
 {
   "uri": "spotify:track:7LQLbChhh7aURz53yOTL",
-  "name": "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm",
+  "name": "Entre Poetas y Presos",
   "album": "Entre Poetas y Presos",
   "artist": "La Raíz",
   "spotifyUserId": "feserr"

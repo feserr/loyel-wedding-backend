@@ -4,8 +4,8 @@ POST {{hostname}}/api/auth/register HTTP/1.1
 content-type: application/json
 
 {
-  "email": "fraserm1989@gmail.com",
-  "name": "Elías",
+  "email": "jenna@doe.com",
+  "name": "Jenna Doe",
   "password": "123456"
 }
 
@@ -15,13 +15,13 @@ POST {{hostname}}/api/auth/signin HTTP/1.1
 content-type: application/json
 
 {
-  "email": "jenna.doe@email.com",
-  "password": "1234"
+  "email": "john@doe.com",
+  "password": "123456"
 }
 
 ###
 
-GET {{hostname}}/api/auth/forgot/fraserm1989@gmail.com HTTP/1.1
+GET {{hostname}}/api/auth/forgot/jenna@doe.com HTTP/1.1
 
 ###
 
@@ -29,7 +29,7 @@ POST {{hostname}}/api/auth/newPassword HTTP/1.1
 content-type: application/json
 
 {
-  "email": "jenna.doe@email.com",
+  "email": "jenna@doe.com",
   "tempPassword": "qzkda5te",
   "newPassword": "1234"
 }

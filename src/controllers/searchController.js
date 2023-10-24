@@ -1,5 +1,9 @@
-const { Track, User, Like } = require('../../db');
 const retrieveAccessToken = require('../utils/spotify');
+const db = require('../../db/db/models');
+
+const {
+  User, Track, Like, Role, RoleType,
+} = db;
 
 const searchController = {
   search: async (req, res) => {
@@ -13,6 +17,7 @@ const searchController = {
           let addedById = '';
           let addedByName = '';
           let likes = [];
+          let userRoleColor = 'black';
 
           const trackExist = await Track.findOne({ where: { spotifyTrackId: track.id } });
           if (trackExist) {
@@ -24,6 +29,12 @@ const searchController = {
             likes = await Promise.all(
               await tracksLikes.map(async (element) => (await User.findByPk(element.userId)).id),
             );
+
+            const userRole = await Role.findOne({ where: { userId: user.id } });
+            if (userRole) {
+              const roleType = await RoleType.findByPk(userRole.roleTypeId);
+              if (roleType) userRoleColor = roleType.color;
+            }
           }
 
           return {
@@ -35,6 +46,7 @@ const searchController = {
             addedById,
             addedByName,
             likes,
+            userRoleColor,
           };
         }),
       );

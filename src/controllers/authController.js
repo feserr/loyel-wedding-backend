@@ -5,8 +5,11 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 
 const { findUser, removeCookie } = require('../utils/user');
-const { User, Track, Like } = require('../../db');
-const { TempPassword } = require('../../db/TempPassword');
+const db = require('../../db/db/models');
+
+const {
+  User, TempPassword, Track, Like,
+} = db;
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
@@ -196,7 +199,7 @@ const authController = {
         }),
       );
 
-      user.destroy();
+      await user.destroy();
 
       removeCookie(req, res);
 

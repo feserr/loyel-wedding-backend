@@ -1,5 +1,7 @@
 const { Op } = require('sequelize');
-const { User } = require('../../db');
+const db = require('../../db/db/models');
+
+const { User } = db;
 
 const checkDuplicate = async (req, res, next) => {
   try {

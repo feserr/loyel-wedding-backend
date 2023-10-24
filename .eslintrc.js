@@ -9,9 +9,7 @@ module.exports = {
       env: {
         node: true,
       },
-      files: [
-        '.eslintrc.{js,cjs}',
-      ],
+      files: ['.eslintrc.{js,cjs}'],
       parserOptions: {
         sourceType: 'script',
       },
@@ -21,5 +19,6 @@ module.exports = {
     ecmaVersion: 'latest',
   },
   rules: {
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
 };

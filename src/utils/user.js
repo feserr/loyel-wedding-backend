@@ -1,4 +1,6 @@
-const { User } = require('../../db');
+const db = require('../../db/db/models');
+
+const { User } = db;
 
 const findUser = async (id) => {
   try {

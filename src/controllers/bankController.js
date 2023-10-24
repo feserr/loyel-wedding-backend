@@ -1,4 +1,6 @@
-const { Bank, Key } = require('../../db');
+const db = require('../../db/db/models');
+
+const { Bank, Key } = db;
 
 const bankController = {
   getAccounts: async (req, res) => {

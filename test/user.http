@@ -1,0 +1,5 @@
+@hostname = http://localhost:3005
+
+GET {{hostname}}/api/user HTTP/1.1
+
+###

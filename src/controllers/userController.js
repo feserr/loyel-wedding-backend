@@ -1,5 +1,9 @@
-const { User, Track, Like } = require('../../db');
 const { findUser } = require('../utils/user');
+const db = require('../../db/db/models');
+
+const {
+  User, Track, Like, RoleType, Role,
+} = db;
 
 const userController = {
   info: async (req, res) => {
@@ -10,11 +14,16 @@ const userController = {
       let tracks = await Track.findAll({ where: { userId: user.id } });
       tracks = await Promise.all(
         tracks.map(async (track) => {
+          let userRoleColor = '';
+          const userRole = await Role.findOne({ where: { userId: user.id } });
+          if (userRole) {
+            const roleType = await RoleType.findByPk(userRole.roleTypeId);
+            if (roleType) userRoleColor = roleType.color;
+          }
+
           const tracksLikes = await Like.findAll({ where: { trackId: track.id } });
           const userLikes = await Promise.all(
-            await tracksLikes.map(
-              async (element) => (await User.findByPk(element.userId)).name,
-            ),
+            await tracksLikes.map(async (element) => (await User.findByPk(element.userId)).id),
           );
 
           return {
@@ -26,6 +35,7 @@ const userController = {
             spotifyTrackId: track.spotifyTrackId,
             userName: user.name,
             likes: userLikes,
+            userRoleColor,
           };
         }),
       );
@@ -44,7 +54,14 @@ const userController = {
       const user = await User.findByPk(req.params.id);
       if (!user) return res.status(400).send({ message: 'User not exist' });
 
-      res.send({ name: user.name });
+      let userRoleTypeId = '';
+      const userRole = await Role.findOne({ where: { userId: user.id } });
+      if (userRole) {
+        const roleType = await RoleType.findByPk(userRole.roleTypeId);
+        if (roleType) userRoleTypeId = roleType.id;
+      }
+
+      res.send({ name: user.name, roleTypeId: userRoleTypeId });
     } catch (error) {
       global.logger.error(error.message);
       res.status(500).send({ message: 'Failed to get the user info' });
