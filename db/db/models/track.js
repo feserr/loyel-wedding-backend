@@ -3,7 +3,7 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Track extends Model {
     static associate(models) {
-      Track.hasOne(models.User, { foreignKey: 'userId', as: 'User' });
+      Track.belongsTo(models.User, { foreignKey: 'userId', as: 'User' });
       Track.hasMany(models.Like, { foreignKey: 'trackId', as: 'Like' });
     }
   }
